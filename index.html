@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Footprint Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!--
+    README: Carbon Footprint Tracker Demo
+    
+    SETUP:
+    1. Serve this folder with a static server:
+       - npx http-server (port 8080)
+       - python -m http.server 8080
+       - or any static file server
+    2. Open app.js and paste your API keys at the top:
+       - CLIMATIQ_API_KEY: Get from https://www.climatiq.io/
+       - GEMINI_API_KEY: Get from https://aistudio.google.com/apikey
+    3. Open http://localhost:8080 in your browser
+    
+    USAGE:
+    - Select activity mode (car/bus/train/flight)
+    - Enter distance (km) or electricity (kWh)
+    - Click Estimate to calculate CO₂e via Climatiq API
+    - View 7-day history chart
+    - Chat with Gemini AI assistant (model: gemini-2.5-flash-lite)
+    - Export history as CSV
+    
+    SECURITY NOTE:
+    API keys are embedded in client-side JavaScript for demo purposes only.
+    This is insecure for production. Rotate keys after demo use.
+    
+    API References:
+    - Climatiq: https://docs.climatiq.io/
+    - Gemini: https://ai.google.dev/docs
+    -->
+    
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div>
+                    <h1>Carbon Footprint Tracker</h1>
+                    <p class="subtitle">Track your daily emissions and get AI-powered insights</p>
+                </div>
+                <div class="user-menu">
+                    <span id="userDisplay" class="user-name"></span>
+                    <button id="logoutBtn" class="btn-secondary btn-small">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="content-grid">
+                <!-- Left: Input and Results -->
+                <div class="input-section">
+                    <div class="card input-card">
+                        <h2>Calculate Emissions</h2>
+                        <form id="estimateForm">
+                            <div class="form-group">
+                                <label for="activityMode">Activity Mode</label>
+                                <select id="activityMode" name="mode" required>
+                                    <option value="car">Car</option>
+                                    <option value="bus">Bus</option>
+                                    <option value="train">Train</option>
+                                    <option value="flight">Flight</option>
+                                    <option value="electricity">Electricity</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="distance">Distance (km)</label>
+                                <input type="number" id="distance" name="distance" min="0" step="0.1" placeholder="0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="kwh">Electricity (kWh)</label>
+                                <input type="number" id="kwh" name="kwh" min="0" step="0.1" placeholder="0">
+                            </div>
+                            
+                            <button type="submit" id="estimateBtn" class="btn-primary">Estimate CO₂e</button>
+                        </form>
+                    </div>
+
+                    <div class="card result-card" id="resultCard" style="display: none;">
+                        <h3>Estimation Result</h3>
+                        <div id="resultContent"></div>
+                        <details class="json-details">
+                            <summary>Raw JSON</summary>
+                            <pre id="rawJson"></pre>
+                        </details>
+                        <button id="retryBtn" class="btn-secondary" style="display: none;">Retry</button>
+                    </div>
+
+                    <div class="card history-card">
+                        <h3>7-Day History</h3>
+                        <canvas id="historyChart"></canvas>
+                        <div class="history-actions">
+                            <button id="exportBtn" class="btn-secondary">Export CSV</button>
+                        </div>
+                        <div class="history-table-container">
+                            <table id="historyTable">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Total (kg CO₂e)</th>
+                                        <th>Top Category</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Gemini Chat -->
+                <div class="chat-section">
+                    <div class="card chat-card">
+                        <div class="chat-header">
+                            <h3>AI Assistant</h3>
+                            <button id="chatToggle" class="chat-toggle" aria-label="Toggle chat">−</button>
+                        </div>
+                        <div class="chat-container" id="chatContainer">
+                            <div class="chat-messages" id="chatMessages">
+                                <div class="message bot-message">
+                                    <div class="message-content">
+                                        Hello! I'm your carbon footprint assistant. Ask me about emissions, tips to reduce your footprint, or anything related to sustainability.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-input-container">
+                                <input type="text" id="chatInput" placeholder="Ask about carbon emissions..." aria-label="Chat input">
+                                <button id="chatSendBtn" class="btn-secondary">Send</button>
+                            </div>
+                            <div id="chatTyping" class="typing-indicator" style="display: none;">
+                                <span></span><span></span><span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+    <script src="chat.js"></script>
+    <script>
+        // Handle logout
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    if (typeof logoutUser === 'function') {
+                        logoutUser();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
