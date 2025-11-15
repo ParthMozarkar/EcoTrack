@@ -1,0 +1,37 @@
+{
+  "description": "Reference emission factors for common activities (Climatiq API provides real-time factors)",
+  "note": "This file is for reference only. The app uses Climatiq API for actual calculations.",
+  "common_activities": {
+    "car": {
+      "activity_id": "passenger_vehicle-vehicle_type_car-fuel_source_na-distance_na-engine_size_na",
+      "description": "Passenger car travel",
+      "unit": "km"
+    },
+    "bus": {
+      "activity_id": "passenger_vehicle-vehicle_type_bus-fuel_source_na-distance_na-engine_size_na",
+      "description": "Bus travel",
+      "unit": "km"
+    },
+    "train": {
+      "activity_id": "passenger_vehicle-vehicle_type_train-fuel_source_na-distance_na-engine_size_na",
+      "description": "Train travel",
+      "unit": "km"
+    },
+    "flight": {
+      "activity_id": "passenger_vehicle-vehicle_type_aircraft-fuel_source_na-distance_na",
+      "description": "Air travel",
+      "unit": "km"
+    },
+    "electricity": {
+      "activity_id": "electricity-energy_source_grid_mix-consumer_user_grid_mix",
+      "description": "Grid electricity consumption",
+      "unit": "kWh"
+    }
+  },
+  "climatiq_api": {
+    "estimate_endpoint": "https://api.climatiq.io/data/v1/estimate",
+    "search_endpoint": "https://api.climatiq.io/data/v1/factors",
+    "documentation": "https://docs.climatiq.io/"
+  }
+}
+
