@@ -13,6 +13,7 @@ const MAX_CHAT_HISTORY = 25;
 async function callGemini(prompt) {
     // Use the generateContent REST endpoint
     const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent';
+    const model = 'gemini-2.5-flash-lite';
     
     const body = {
         contents: [{
