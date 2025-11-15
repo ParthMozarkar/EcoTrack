@@ -62,10 +62,3 @@ Feel free to fork the repository, create issues, or contribute new features. Sug
 📜 License
 
 This project is open-source under the MIT License.
-
-If you want, I can also create:
-✔ Logo for EcoTrack
-✔ UI mockup
-✔ Full HTML/CSS/JS code
-✔ Dashboard design
-✔ API integration structure
